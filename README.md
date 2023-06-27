@@ -13,4 +13,4 @@ tools:
 
 
 ## Diagram
-![diagram](https://github.com/the-sharp-solutions/login-registration/blob/master/104789980-15581a00-578e-11eb-998d-30f2e6a9f461.png)
+![diagram of the project](https://github.com/the-sharp-solutions/login-registration/blob/main/104789980-15581a00-578e-11eb-998d-30f2e6a9f461.png)
