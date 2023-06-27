@@ -1,5 +1,6 @@
 package com.security.loginregistration.appuser;
 
+import com.security.loginregistration.registration.RegistrationService;
 import com.security.loginregistration.registration.token.ConfirmationToken;
 import com.security.loginregistration.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,28 @@ public class AppUserService implements UserDetailsService {
         boolean userExists = appUserRepository.findByEmail(appUser.getUsername()).isPresent();
 
         if (userExists) {
-            // TODO: if check of attributes are same and if email is not confirmed send confirmation email
+//            if (!appUser.getEnabled()) {
+//                // password encoding
+//                String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
+//
+//                appUser.setPassword(encodedPassword);
+//
+//                appUserRepository.save(appUser);
+//
+//                // generate new token
+//                String newToken = UUID.randomUUID().toString();
+//                // conf token
+//                ConfirmationToken confirmationToken = new ConfirmationToken(
+//                        newToken,
+//                        LocalDateTime.now(),
+//                        LocalDateTime.now().plusMinutes(15),
+//                        appUser
+//                );
+//                // send conf token via mail
+//                confirmationTokenService.saveConfirmationToken(confirmationToken);
+//
+//                return newToken;
+//            }
             throw new IllegalStateException("email is already taken");
         }
 
