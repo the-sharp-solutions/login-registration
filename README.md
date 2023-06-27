@@ -9,3 +9,8 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1
 
 tools:
 [maildev](https://github.com/maildev/maildev, 'SMTP Server + Web Interface for viewing and testing emails during development.')
+
+
+
+## Diagram
+![diagram](https://github.com/the-sharp-solutions/login-registration/blob/master/104789980-15581a00-578e-11eb-998d-30f2e6a9f461.png)
