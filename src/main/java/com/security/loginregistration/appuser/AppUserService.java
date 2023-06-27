@@ -22,6 +22,9 @@ public class AppUserService implements UserDetailsService {
             = "user with email %s not found";
     private final ConfirmationTokenService confirmationTokenService;
 
+    private static String token;
+    private static ConfirmationToken confirmationToken;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return appUserRepository.findByEmail(email)
@@ -32,29 +35,36 @@ public class AppUserService implements UserDetailsService {
         boolean userExists = appUserRepository.findByEmail(appUser.getUsername()).isPresent();
 
         if (userExists) {
-//            if (!appUser.getEnabled()) {
-//                // password encoding
-//                String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
-//
-//                appUser.setPassword(encodedPassword);
-//
-//                appUserRepository.save(appUser);
-//
-//                // generate new token
-//                String newToken = UUID.randomUUID().toString();
-//                // conf token
-//                ConfirmationToken confirmationToken = new ConfirmationToken(
-//                        newToken,
-//                        LocalDateTime.now(),
-//                        LocalDateTime.now().plusMinutes(15),
-//                        appUser
-//                );
-//                // send conf token via mail
-//                confirmationTokenService.saveConfirmationToken(confirmationToken);
-//
-//                return newToken;
-//            }
-            throw new IllegalStateException("email is already taken");
+            System.out.println("enb:?  "+confirmationToken.getAppUser().getId());
+            if (!confirmationToken.getAppUser().getEnabled()) {
+                // removed the old token from the database table
+                confirmationTokenService.removeById(confirmationToken);
+                AppUser oldUser = confirmationToken.getAppUser();
+
+                // password encoding
+                String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
+
+                appUser.setPassword(encodedPassword);
+
+                appUserRepository.save(appUser);
+
+                // generate new token
+                String newToken = UUID.randomUUID().toString();
+                // conf token
+                ConfirmationToken confirmationToken = new ConfirmationToken(
+                        newToken,
+                        LocalDateTime.now(),
+                        LocalDateTime.now().plusMinutes(15),
+                        oldUser
+                );
+                // send conf token via mail
+                //confirmationTokenService.saveConfirmationToken(confirmationToken);
+                confirmationTokenService.updateById(confirmationToken);
+
+                return newToken;
+            } else {
+                throw new IllegalStateException("email is already taken");
+            }
         }
 
         // password encoding
@@ -62,17 +72,22 @@ public class AppUserService implements UserDetailsService {
 
         appUser.setPassword(encodedPassword);
 
+        // save user information's to the database
         appUserRepository.save(appUser);
 
-        String token = UUID.randomUUID().toString();
+        token = UUID.randomUUID().toString();
 
-        ConfirmationToken confirmationToken = new ConfirmationToken(
+        confirmationToken = new ConfirmationToken(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
                 appUser
         );
+        // save confirmation token details to the database
         confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+
+
         // TODO: SEND MAIL
         return token;
     }

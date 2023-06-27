@@ -15,6 +15,14 @@ public class ConfirmationTokenService {
         confirmationTokenRepository.save(confirmationToken);
     }
 
+    public void updateById(ConfirmationToken confirmationToken) {
+        confirmationTokenRepository.save(confirmationToken);
+    }
+
+    public void removeById(ConfirmationToken confirmationToken) {
+        confirmationTokenRepository.deleteById(confirmationToken.getAppUser().getId());
+    }
+
     public Optional<ConfirmationToken> getToken(String token) {
         return confirmationTokenRepository.findByToken(token);
     }
