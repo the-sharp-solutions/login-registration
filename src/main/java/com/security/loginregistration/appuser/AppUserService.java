@@ -35,31 +35,27 @@ public class AppUserService implements UserDetailsService {
         boolean userExists = appUserRepository.findByEmail(appUser.getUsername()).isPresent();
 
         if (userExists) {
-            System.out.println("enb:?  "+confirmationToken.getAppUser().getId());
             if (!confirmationToken.getAppUser().getEnabled()) {
-                // removed the old token from the database table
-                confirmationTokenService.removeById(confirmationToken);
+
                 AppUser oldUser = confirmationToken.getAppUser();
 
-                // password encoding
-                String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
+                oldUser.setFirstName(appUser.getFirstName());
+                oldUser.setLastName(appUser.getLastName());
+                oldUser.setEmail(appUser.getEmail());
+                oldUser.setPassword(bCryptPasswordEncoder.encode(appUser.getPassword()));
+                oldUser.setAppUserRole(AppUserRole.USER);
 
-                appUser.setPassword(encodedPassword);
-
-                appUserRepository.save(appUser);
+                appUserRepository.save(oldUser);
 
                 // generate new token
                 String newToken = UUID.randomUUID().toString();
-                // conf token
-                ConfirmationToken confirmationToken = new ConfirmationToken(
-                        newToken,
-                        LocalDateTime.now(),
-                        LocalDateTime.now().plusMinutes(15),
-                        oldUser
-                );
-                // send conf token via mail
-                //confirmationTokenService.saveConfirmationToken(confirmationToken);
-                confirmationTokenService.updateById(confirmationToken);
+
+                confirmationToken.setToken(newToken);
+                confirmationToken.setCreatedAt(LocalDateTime.now());
+                confirmationToken.setExpiresAt(LocalDateTime.now().plusMinutes(15));
+                confirmationToken.setAppUser(oldUser);
+
+                confirmationTokenService.saveConfirmationToken(confirmationToken);
 
                 return newToken;
             } else {
