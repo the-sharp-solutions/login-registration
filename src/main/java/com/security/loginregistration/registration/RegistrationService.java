@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -44,6 +45,7 @@ public class RegistrationService {
 
     @Transactional
     public String confirmToken(String token) {
+
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() -> new IllegalStateException("token is not found"));
@@ -135,4 +137,5 @@ public class RegistrationService {
                 "\n" +
                 "</div></div>";
     }
+
 }

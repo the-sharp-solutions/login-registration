@@ -1,6 +1,5 @@
 package com.security.loginregistration.appuser;
 
-import com.security.loginregistration.registration.RegistrationService;
 import com.security.loginregistration.registration.token.ConfirmationToken;
 import com.security.loginregistration.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -11,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,6 +25,8 @@ public class AppUserService implements UserDetailsService {
     private static String token;
     private static ConfirmationToken confirmationToken;
 
+    private static boolean isTrue;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return appUserRepository.findByEmail(email)
@@ -34,9 +36,13 @@ public class AppUserService implements UserDetailsService {
     public String signUp(AppUser appUser) {
         boolean userExists = appUserRepository.findByEmail(appUser.getUsername()).isPresent();
 
-        if (userExists) {
-            if (!confirmationToken.getAppUser().getEnabled()) {
+        if (userExists ) {
+            Optional<AppUser> optionalAppUser = appUserRepository.findByEmail(appUser.getUsername());
+            optionalAppUser.ifPresent(user -> {
+                isTrue = user.getEnabled();
+            });
 
+            if (!isTrue) {
                 AppUser oldUser = confirmationToken.getAppUser();
 
                 oldUser.setFirstName(appUser.getFirstName());
@@ -58,9 +64,10 @@ public class AppUserService implements UserDetailsService {
                 confirmationTokenService.saveConfirmationToken(confirmationToken);
 
                 return newToken;
-            } else {
-                throw new IllegalStateException("email is already taken");
             }
+
+            throw new IllegalStateException("email is already taken");
+
         }
 
         // password encoding
@@ -81,8 +88,6 @@ public class AppUserService implements UserDetailsService {
         );
         // save confirmation token details to the database
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-
 
         // TODO: SEND MAIL
         return token;
