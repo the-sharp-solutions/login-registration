@@ -1,9 +1,12 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: 1024
-    url: jdbc:postgresql://localhost:5432/login_registration
+    #username: postgres
+    username: login_registration_user
+    #password: 1024
+    password: 91gcmYA55C6jRy5MCyXh4f03y3F3vJSp
+    #url: jdbc:postgresql://localhost:5432/login_registration
+    url: jdbc:postgresql://dpg-cihtkr5ph6erq6kmgdag-a:5432/login_registration
 
   jpa:
     hibernate:
