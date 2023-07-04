@@ -1,8 +1,11 @@
 package com.security.loginregistration.registration;
 
+import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.security.loginregistration.appuser.AppUser;
 import com.security.loginregistration.appuser.AppUserRole;
 import com.security.loginregistration.appuser.AppUserService;
+import com.security.loginregistration.clientIP.RequestService;
+import com.security.loginregistration.clientIP.clientLocation.LocationDataFromIP;
 import com.security.loginregistration.email.EmailSender;
 import com.security.loginregistration.registration.token.ConfirmationToken;
 import com.security.loginregistration.registration.token.ConfirmationTokenService;
@@ -10,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -20,8 +25,11 @@ public class RegistrationService {
     private final AppUserService appUserService;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+    private final RequestService requestService;
 
-    public String register(RegistrationRequest request) {
+    private final LocationDataFromIP locationDataFromIP;
+
+    public String register(RegistrationRequest request, HttpServletRequest httpServletRequest) throws IOException, GeoIp2Exception {
         boolean isValidEmail = emailValidator.test(request.getEmail());
 
         if (!isValidEmail) {
@@ -40,7 +48,10 @@ public class RegistrationService {
 
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
 
-        return token;
+        //return "token: "+token + "\nip: " + requestService.getClientIpAddress(httpServletRequest);
+        String ip = requestService.getClientIpAddress(httpServletRequest);
+        String locationDetails = locationDataFromIP.locationData("37.111.220.245");
+        return "token: " + token + "\nip: " + ip + "\n" + locationDetails;
     }
 
     @Transactional
