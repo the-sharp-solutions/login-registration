@@ -1,6 +1,5 @@
 FROM eclipse-temurin:11
 VOLUME /temp
-RUN mkdir /opt/app
-COPY target/*.jar /opt/app/japp.jar
-ENTRYPOINT ["java", "-jar", "/opt/app/japp.jar"]
-EXPOSE 8585
+COPY target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+EXPOSE 8080
