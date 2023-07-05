@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -47,7 +46,6 @@ public class RegistrationService {
         String link = "http://localhost:1010/api/v1/registration/confirm?token=" + token;
 
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
-
         //return "token: "+token + "\nip: " + requestService.getClientIpAddress(httpServletRequest);
         String ip = requestService.getClientIpAddress(httpServletRequest);
         String locationDetails = locationDataFromIP.locationData("37.111.220.245");

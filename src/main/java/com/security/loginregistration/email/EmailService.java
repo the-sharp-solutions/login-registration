@@ -26,6 +26,7 @@ public class EmailService implements EmailSender {
             mimeMessageHelper.setTo(to);
             mimeMessageHelper.setSubject("Confirm your email");
             mimeMessageHelper.setFrom("hello@cs-joy.me");
+
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
