@@ -26,7 +26,7 @@ public class RegistrationService {
     private final EmailSender emailSender;
     private final RequestService requestService;
 
-    private final LocationDataFromIP locationDataFromIP;
+//    private final LocationDataFromIP locationDataFromIP;
 
     public String register(RegistrationRequest request, HttpServletRequest httpServletRequest) throws IOException, GeoIp2Exception {
         boolean isValidEmail = emailValidator.test(request.getEmail());
@@ -43,13 +43,14 @@ public class RegistrationService {
                         AppUserRole.USER
                 )
         );
-        String link = "http://localhost:1010/api/v1/registration/confirm?token=" + token;
+//        String link = "http://localhost:1010/api/v1/registration/confirm?token=" + token;
+        String link = "https://testjar.onrender.com/api/v1/registration/confirm?token=" + token;
 
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
         //return "token: "+token + "\nip: " + requestService.getClientIpAddress(httpServletRequest);
         String ip = requestService.getClientIpAddress(httpServletRequest);
-        String locationDetails = locationDataFromIP.locationData("37.111.220.245");
-        return "token: " + token + "\nip: " + ip + "\n" + locationDetails;
+//        String locationDetails = locationDataFromIP.locationData("37.111.220.245");
+        return "token: " + token + "\nip: " + ip;
     }
 
     @Transactional
