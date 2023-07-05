@@ -1,7 +1,5 @@
 HELP.md
 
-application.properties
-
 ### STS ###
 .apt_generated
 .classpath
@@ -29,3 +27,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+secrets.properties
