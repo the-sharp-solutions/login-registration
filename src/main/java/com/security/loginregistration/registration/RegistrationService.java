@@ -27,9 +27,7 @@ public class RegistrationService {
     private final EmailSender emailSender;
     private final RequestService requestService;
 
-    private final LocationDataFromIP locationDataFromIP;
-
-    public String register(RegistrationRequest request, HttpServletRequest httpServletRequest) throws IOException, GeoIp2Exception {
+    public String register(RegistrationRequest request, HttpServletRequest httpServletRequest) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
 
         if (!isValidEmail) {
@@ -50,14 +48,8 @@ public class RegistrationService {
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
         //return "token: "+token + "\nip: " + requestService.getClientIpAddress(httpServletRequest);
         String ip = requestService.getClientIpAddress(httpServletRequest);
-        String locationDetails;
-        try {
-            locationDetails = locationDataFromIP.locationData(ip);
-        } catch (AddressNotFoundException e) {
-            locationDetails = null;
-            System.out.println("The address " + ip + " is not in the database");
-        }
-        return "token: " + token + "\nip: " + ip + "\n" + locationDetails;
+
+        return "token: " + token + "\nip: " + ip;
     }
 
     @Transactional

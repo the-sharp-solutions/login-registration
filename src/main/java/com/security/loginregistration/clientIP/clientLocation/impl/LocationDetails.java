@@ -8,6 +8,7 @@ import com.security.loginregistration.file.FileLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,17 +18,17 @@ import java.net.InetAddress;
 
 @Service
 public class LocationDetails implements LocationDataFromIP {
-    private final FileLoader fileLoader;
+    private final ResourceLoader resources;
 
     @Autowired
-    public LocationDetails(FileLoader fileLoader) {
-        this.fileLoader = fileLoader;
+    public LocationDetails(ResourceLoader resources) {
+        this.resources = resources;
     }
 
     @Override
     public String locationData(String ip) throws IOException, GeoIp2Exception {
-        Resource resource = new ClassPathResource("\\target\\classes\\static\\mmdb\\GeoLite2City.mmdb");
-        String dbLocation = resource.getFile().getAbsolutePath();
+        //Resource resource = new ClassPathResource("classpath:/static/mmdb/GeoLite2City.mmdb");
+        String dbLocation = "E:\\GitHub\\login-registration\\target\\classes\\static\\mmdb\\GeoLite2City.mmdb";//resource.getFile().getAbsolutePath();
 
         File database = new File(dbLocation);
         DatabaseReader databaseReader = new DatabaseReader.Builder(database).build();
