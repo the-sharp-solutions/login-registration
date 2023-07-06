@@ -19,4 +19,5 @@ E:\GitHub\login-registration\src\main\java\com\security\loginregistration\appuse
 E:\GitHub\login-registration\src\main\java\com\security\loginregistration\registration\RegistrationRequest.java
 E:\GitHub\login-registration\src\main\java\com\security\loginregistration\registration\token\ConfirmationTokenRepository.java
 E:\GitHub\login-registration\src\main\java\com\security\loginregistration\email\EmailService.java
+E:\GitHub\login-registration\src\main\java\com\security\loginregistration\file\FileController.java
 E:\GitHub\login-registration\src\main\java\com\security\loginregistration\security\PasswordEncoder.java

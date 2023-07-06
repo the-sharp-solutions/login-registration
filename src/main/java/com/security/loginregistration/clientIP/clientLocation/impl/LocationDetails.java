@@ -6,7 +6,10 @@ import com.maxmind.geoip2.model.CityResponse;
 import com.security.loginregistration.clientIP.clientLocation.LocationDataFromIP;
 import com.security.loginregistration.file.FileLoader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,12 +26,9 @@ public class LocationDetails implements LocationDataFromIP {
 
     @Override
     public String locationData(String ip) throws IOException, GeoIp2Exception {
-        String dbLocation = "D:\\GeoLite2-City_20230630\\GeoLite2-City.mmdb";
-//        String dbLocation = "/src/main/java/com/security/loginregistration/clientIP/clientLocation/impl/GeoLite2-City_20230630/GeoLite2-City.mmdb";
-//        String dbLocation = "src\\main\\java\\com\\security\\loginregistration\\clientIP\\clientLocation\\impl\\GeoLite2-City_20230630";
-        System.out.println(
-                fileLoader.loadFile("GeoLite2City.mmdb").toString()
-        );
+        Resource resource = new ClassPathResource("static/mmdb/GeoLite2City.mmdb");
+        String dbLocation =resource.getFile().getAbsolutePath();
+
         File database = new File(dbLocation);
         DatabaseReader databaseReader = new DatabaseReader.Builder(database).build();
 

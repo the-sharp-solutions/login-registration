@@ -1,5 +1,6 @@
 package com.security.loginregistration.registration;
 
+import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.security.loginregistration.appuser.AppUser;
 import com.security.loginregistration.appuser.AppUserRole;
@@ -26,7 +27,7 @@ public class RegistrationService {
     private final EmailSender emailSender;
     private final RequestService requestService;
 
-//    private final LocationDataFromIP locationDataFromIP;
+    private final LocationDataFromIP locationDataFromIP;
 
     public String register(RegistrationRequest request, HttpServletRequest httpServletRequest) throws IOException, GeoIp2Exception {
         boolean isValidEmail = emailValidator.test(request.getEmail());
@@ -49,8 +50,14 @@ public class RegistrationService {
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
         //return "token: "+token + "\nip: " + requestService.getClientIpAddress(httpServletRequest);
         String ip = requestService.getClientIpAddress(httpServletRequest);
-//        String locationDetails = locationDataFromIP.locationData("37.111.220.245");
-        return "token: " + token + "\nip: " + ip;
+        String locationDetails;
+        try {
+            locationDetails = locationDataFromIP.locationData(ip);
+        } catch (AddressNotFoundException e) {
+            locationDetails = null;
+            System.out.println("The address " + ip + " is not in the database");
+        }
+        return "token: " + token + "\nip: " + ip + "\n" + locationDetails;
     }
 
     @Transactional
