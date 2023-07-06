@@ -26,8 +26,8 @@ public class LocationDetails implements LocationDataFromIP {
 
     @Override
     public String locationData(String ip) throws IOException, GeoIp2Exception {
-        Resource resource = new ClassPathResource("static/mmdb/GeoLite2City.mmdb");
-        String dbLocation =resource.getFile().getAbsolutePath();
+        Resource resource = new ClassPathResource("\\target\\classes\\static\\mmdb\\GeoLite2City.mmdb");
+        String dbLocation = resource.getFile().getAbsolutePath();
 
         File database = new File(dbLocation);
         DatabaseReader databaseReader = new DatabaseReader.Builder(database).build();
