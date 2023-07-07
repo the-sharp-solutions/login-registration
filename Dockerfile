@@ -4,9 +4,7 @@
 #ENTRYPOINT ["java", "-jar", "/app.jar"]
 #EXPOSE 8080
 
-FROM eclipse-temurin:11-jdk as builder
-
-ARG MAVEN_VERSION=3.9.3
+FROM 3.9.3-eclipse-temurin-11 AS build
 WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:go-offline
